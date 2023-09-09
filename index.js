@@ -24,6 +24,7 @@ import cartRouter from './routes/Cart';
 import ordersRouter from './routes/Order';
 import User from './model/User';
 import { isAuth, sanitizeUser, cookieExtractor } from './services/common';
+import path from 'path';
 
 // Webhook is here.
 
@@ -69,7 +70,7 @@ opts.secretOrKey = process.env.JWT_SECRET_KEY; // TODO: should not be in code;
 
 // middleware's
 
-server.use(express.static('build'));
+server.use(express.static(path.resolve(__dirname, 'build')));
 server.use(cookieParser());
 
 server.use(
