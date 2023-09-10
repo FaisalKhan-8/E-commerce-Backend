@@ -26,12 +26,14 @@ import User from './model/User';
 import { isAuth, sanitizeUser, cookieExtractor } from './services/common';
 import path from 'path';
 import Order from './model/Order';
+const { env } = require('process');
 
 // Webhook is here.
 
 // TODO: we will capture actual order after deploying out server live on public URL
 
 const endpointSecret = process.env.ENDPOINT_SECRET;
+
 server.post(
   '/webhook',
   express.raw({ type: 'application/json' }),
@@ -46,17 +48,18 @@ server.post(
       response.status(400).send(`Webhook Error: ${err.message}`);
       return;
     }
-    // for
 
     // Handle the event
     switch (event.type) {
       case 'payment_intent.succeeded':
         const paymentIntentSucceeded = event.data.object;
+
         const order = await Order.findById(
           paymentIntentSucceeded.metadata.orderId
         );
         order.paymentStatus = 'received';
         await order.save();
+
         break;
       // ... handle other event types
       default:
