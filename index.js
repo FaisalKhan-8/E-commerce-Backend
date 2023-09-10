@@ -1,4 +1,4 @@
-import dotenv from 'dotenv/config';
+require('dotenv').config();
 import express from 'express';
 const server = express();
 import mongoose from 'mongoose';
@@ -197,6 +197,7 @@ main().catch((err) => console.log(err));
 
 async function main() {
   await mongoose.connect(process.env.MONGODB_URL);
+
   console.log('database connected');
 }
 

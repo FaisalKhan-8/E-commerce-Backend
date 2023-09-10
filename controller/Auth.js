@@ -2,7 +2,6 @@ import User from '../model/User';
 import crypto from 'crypto';
 
 import { sanitizeUser } from '../services/common';
-const SECRET_KEY = 'SECRET_KEY';
 
 import jwt from 'jsonwebtoken';
 
