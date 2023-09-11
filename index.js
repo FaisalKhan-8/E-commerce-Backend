@@ -28,7 +28,7 @@ import path from 'path';
 import Order from './model/Order';
 const { env } = require('process');
 
-// Webhook is here.
+// Webhook
 
 // TODO: we will capture actual order after deploying out server live on public URL
 
@@ -53,13 +53,13 @@ server.post(
     switch (event.type) {
       case 'payment_intent.succeeded':
         const paymentIntentSucceeded = event.data.object;
-
+        console.log({ paymentIntentSucceeded });
+        // Then define and call a function to handle the event payment_intent.succeeded
         const order = await Order.findById(
           paymentIntentSucceeded.metadata.orderId
         );
         order.paymentStatus = 'received';
         await order.save();
-
         break;
       // ... handle other event types
       default:
