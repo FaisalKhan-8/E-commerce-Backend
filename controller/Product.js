@@ -1,23 +1,20 @@
-const { Product } = require('../model/Product');
+import Product from '../model/Product';
 
-exports.createProduct = async (req, res) => {
-  // this product we have to get from API body
+export async function createProduct(req, res) {
+  // this product we have to get from the API body
   const product = new Product(req.body);
-  product.discountPrice = Math.round(
-    product.price * (1 - product.discountPercentage / 100)
-  );
   try {
     const doc = await product.save();
     res.status(201).json(doc);
   } catch (err) {
     res.status(400).json(err);
   }
-};
-
-exports.fetchAllProducts = async (req, res) => {
+}
+export async function fetchAllProducts(req, res) {
   // filter = {"category":["smartphone","laptops"]}
   // sort = {_sort:"price",_order="desc"}
   // pagination = {_page:1,_limit=10}
+  // TODO : we have to try with multiple category and brands after change in front-end
   let condition = {};
   if (!req.query.admin) {
     condition.deleted = { $ne: true };
@@ -26,20 +23,17 @@ exports.fetchAllProducts = async (req, res) => {
   let query = Product.find(condition);
   let totalProductsQuery = Product.find(condition);
 
-  console.log(req.query.category);
-
   if (req.query.category) {
-    query = query.find({ category: { $in: req.query.category.split(',') } });
+    query = query.find({ category: req.query.category });
     totalProductsQuery = totalProductsQuery.find({
-      category: { $in: req.query.category.split(',') },
+      category: req.query.category,
     });
   }
   if (req.query.brand) {
-    query = query.find({ brand: { $in: req.query.brand.split(',') } });
-    totalProductsQuery = totalProductsQuery.find({
-      brand: { $in: req.query.brand.split(',') },
-    });
+    query = query.find({ brand: req.query.brand });
+    totalProductsQuery = totalProductsQuery.find({ brand: req.query.brand });
   }
+  //TODO : How to get sort on discounted Price not on Actual price
   if (req.query._sort && req.query._order) {
     query = query.sort({ [req.query._sort]: req.query._order });
   }
@@ -60,9 +54,9 @@ exports.fetchAllProducts = async (req, res) => {
   } catch (err) {
     res.status(400).json(err);
   }
-};
+}
 
-exports.fetchProductById = async (req, res) => {
+export async function fetchProductById(req, res) {
   const { id } = req.params;
 
   try {
@@ -71,20 +65,16 @@ exports.fetchProductById = async (req, res) => {
   } catch (err) {
     res.status(400).json(err);
   }
-};
+}
 
-exports.updateProduct = async (req, res) => {
+export async function updateProduct(req, res) {
   const { id } = req.params;
   try {
     const product = await Product.findByIdAndUpdate(id, req.body, {
       new: true,
     });
-    product.discountPrice = Math.round(
-      product.price * (1 - product.discountPercentage / 100)
-    );
-    const updatedProduct = await product.save();
-    res.status(200).json(updatedProduct);
+    res.status(200).json(product);
   } catch (err) {
     res.status(400).json(err);
   }
-};
+}

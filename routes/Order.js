@@ -1,11 +1,11 @@
-const express = require('express');
-const {
+import express from 'express';
+import {
   createOrder,
   fetchOrdersByUser,
   deleteOrder,
   updateOrder,
   fetchAllOrders,
-} = require('../controller/Order');
+} from '../controller/Order';
 
 const router = express.Router();
 //  /orders is already added in base path
@@ -16,4 +16,4 @@ router
   .patch('/:id', updateOrder)
   .get('/', fetchAllOrders);
 
-exports.router = router;
+export default router;
