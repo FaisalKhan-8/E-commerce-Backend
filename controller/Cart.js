@@ -1,6 +1,6 @@
-import Cart from '../model/Cart';
+const { Cart } = require('../model/Cart');
 
-export async function fetchCartByUser(req, res) {
+exports.fetchCartByUser = async (req, res) => {
   const { id } = req.user;
   try {
     const cartItems = await Cart.find({ user: id }).populate('product');
@@ -9,9 +9,9 @@ export async function fetchCartByUser(req, res) {
   } catch (err) {
     res.status(400).json(err);
   }
-}
+};
 
-export async function addToCart(req, res) {
+exports.addToCart = async (req, res) => {
   const { id } = req.user;
   const cart = new Cart({ ...req.body, user: id });
   try {
@@ -21,9 +21,9 @@ export async function addToCart(req, res) {
   } catch (err) {
     res.status(400).json(err);
   }
-}
+};
 
-export async function deleteFromCart(req, res) {
+exports.deleteFromCart = async (req, res) => {
   const { id } = req.params;
   try {
     const doc = await Cart.findByIdAndDelete(id);
@@ -31,9 +31,9 @@ export async function deleteFromCart(req, res) {
   } catch (err) {
     res.status(400).json(err);
   }
-}
+};
 
-export async function updateCart(req, res) {
+exports.updateCart = async (req, res) => {
   const { id } = req.params;
   try {
     const cart = await Cart.findByIdAndUpdate(id, req.body, {
@@ -45,4 +45,4 @@ export async function updateCart(req, res) {
   } catch (err) {
     res.status(400).json(err);
   }
-}
+};
