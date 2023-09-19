@@ -1,5 +1,4 @@
-const mongoose = require('mongoose');
-const { Schema } = mongoose;
+import { Schema, model } from 'mongoose';
 
 const brandSchema = new Schema({
   label: { type: String, required: true, unique: true },
@@ -17,5 +16,5 @@ brandSchema.set('toJSON', {
     delete ret._id;
   },
 });
-
-exports.Brand = mongoose.model('Brand', brandSchema);
+const Brand = model('Brand', brandSchema);
+export default Brand;

@@ -1,8 +1,8 @@
-const express = require('express');
-const { fetchUserById, updateUser } = require('../controller/User');
-
+import express from 'express';
+import { fetchUserById, updateUser } from '../controller/User';
 const router = express.Router();
-//  /users is already added in base path
+
+// /users is already added in base path
 router.get('/own', fetchUserById).patch('/:id', updateUser);
 
-exports.router = router;
+export default router;

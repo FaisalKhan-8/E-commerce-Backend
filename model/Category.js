@@ -1,5 +1,4 @@
-const mongoose = require('mongoose');
-const { Schema } = mongoose;
+import { Schema, model } from 'mongoose';
 
 const categorySchema = new Schema({
   label: { type: String, required: true, unique: true },
@@ -17,5 +16,5 @@ categorySchema.set('toJSON', {
     delete ret._id;
   },
 });
-
-exports.Category = mongoose.model('Category', categorySchema);
+const Category = model('Category', categorySchema);
+export default Category;
