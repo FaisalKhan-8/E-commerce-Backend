@@ -1,36 +1,31 @@
-import express from 'express';
+require('dotenv').config();
+const express = require('express');
 const server = express();
-import mongoose from 'mongoose';
-import cors from 'cors';
-import session from 'express-session';
-import jwt from 'jsonwebtoken';
-import crypto from 'crypto';
-import cookieParser from 'cookie-parser';
-
-// passport imports
-import passport from 'passport';
+const mongoose = require('mongoose');
+const cors = require('cors');
+const session = require('express-session');
+const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
-
-// Routes imports
-import productsRouter from './routes/Products';
-import categoriesRouter from './routes/Category';
-import brandsRouter from './routes/Brands';
-import userRouter from './routes/Users';
-import authRouter from './routes/Auth';
-import cartRouter from './routes/Cart';
-import ordersRouter from './routes/Order';
-import User from './model/User';
-import { isAuth, sanitizeUser, cookieExtractor } from './services/common';
-import path from 'path';
-import Order from './model/Order';
-import dotenv from 'dotenv';
-dotenv.config({ silent: process.env.NODE_ENV === 'production' });
+const cookieParser = require('cookie-parser');
+const { createProduct } = require('./controller/Product');
+const productsRouter = require('./routes/Products');
+const categoriesRouter = require('./routes/Categories');
+const brandsRouter = require('./routes/Brands');
+const usersRouter = require('./routes/Users');
+const authRouter = require('./routes/Auth');
+const cartRouter = require('./routes/Cart');
+const ordersRouter = require('./routes/Order');
+const { User } = require('./model/User');
+const { isAuth, sanitizeUser, cookieExtractor } = require('./services/common');
+const path = require('path');
+const { Order } = require('./model/Order');
+const { env } = require('process');
 
 // Webhook
-
-// TODO: we will capture actual order after deploying out server live on public URL
 
 const endpointSecret = process.env.ENDPOINT_SECRET;
 
@@ -53,13 +48,13 @@ server.post(
     switch (event.type) {
       case 'payment_intent.succeeded':
         const paymentIntentSucceeded = event.data.object;
-        console.log({ paymentIntentSucceeded });
-        // Then define and call a function to handle the event payment_intent.succeeded
+
         const order = await Order.findById(
           paymentIntentSucceeded.metadata.orderId
         );
         order.paymentStatus = 'received';
         await order.save();
+
         break;
       // ... handle other event types
       default:
@@ -72,15 +67,15 @@ server.post(
 );
 
 // JWT options
+
 const opts = {};
 opts.jwtFromRequest = cookieExtractor;
-opts.secretOrKey = process.env.JWT_SECRET_KEY; // TODO: should not be in code;
+opts.secretOrKey = process.env.JWT_SECRET_KEY;
 
-// middleware's
+//middlewares
 
 server.use(express.static(path.resolve(__dirname, 'build')));
 server.use(cookieParser());
-
 server.use(
   session({
     secret: process.env.SESSION_KEY,
@@ -89,7 +84,6 @@ server.use(
   })
 );
 server.use(passport.authenticate('session'));
-
 server.use(
   cors({
     exposedHeaders: ['X-Total-Count'],
