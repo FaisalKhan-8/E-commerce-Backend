@@ -1,4 +1,3 @@
-require('dotenv').config();
 import express from 'express';
 const server = express();
 import mongoose from 'mongoose';
@@ -26,7 +25,8 @@ import User from './model/User';
 import { isAuth, sanitizeUser, cookieExtractor } from './services/common';
 import path from 'path';
 import Order from './model/Order';
-const { env } = require('process');
+import dotenv from 'dotenv';
+dotenv.config({ silent: process.env.NODE_ENV === 'production' });
 
 // Webhook
 
