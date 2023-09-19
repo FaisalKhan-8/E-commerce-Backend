@@ -1,15 +1,15 @@
-import Brand from '../model/Brand';
+const { Brand } = require('../model/Brand');
 
-export async function fetchBrands(req, res) {
+exports.fetchBrands = async (req, res) => {
   try {
     const brands = await Brand.find({}).exec();
     res.status(200).json(brands);
   } catch (err) {
     res.status(400).json(err);
   }
-}
+};
 
-export async function createBrand(req, res) {
+exports.createBrand = async (req, res) => {
   const brand = new Brand(req.body);
   try {
     const doc = await brand.save();
@@ -17,4 +17,4 @@ export async function createBrand(req, res) {
   } catch (err) {
     res.status(400).json(err);
   }
-}
+};
