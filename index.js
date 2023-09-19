@@ -95,17 +95,17 @@ server.use(
     exposedHeaders: ['X-Total-Count'],
   })
 );
+
 server.use(express.json()); // to parse req.body
 
-server.use('/products', isAuth(), productsRouter.router);
+server.use('/products', isAuth(), productsRouter);
 // we can also use JWT token for client-only auth
-server.use('/categories', isAuth(), categoriesRouter.router);
-server.use('/brands', isAuth(), brandsRouter.router);
-server.use('/users', isAuth(), usersRouter.router);
-server.use('/auth', authRouter.router);
-server.use('/cart', isAuth(), cartRouter.router);
-server.use('/orders', isAuth(), ordersRouter.router);
-
+server.use('/categories', isAuth(), categoriesRouter);
+server.use('/brands', isAuth(), brandsRouter);
+server.use('/users', isAuth(), userRouter);
+server.use('/auth', authRouter);
+server.use('/cart', isAuth(), cartRouter);
+server.use('/orders', isAuth(), ordersRouter);
 // this line we add to make react router work in case of other routes doesnt match
 server.get('*', (req, res) =>
   res.sendFile(path.resolve('build', 'index.html'))
@@ -120,7 +120,6 @@ passport.use(
     done
   ) {
     // by default passport uses username
-    console.log({ email, password });
     try {
       const user = await User.findOne({ email: email });
       console.log(email, password, user);
@@ -153,6 +152,7 @@ passport.use(
 passport.use(
   'jwt',
   new JwtStrategy(opts, async function (jwt_payload, done) {
+    console.log({ jwt_payload });
     try {
       const user = await User.findById(jwt_payload.id);
       if (user) {
@@ -168,6 +168,7 @@ passport.use(
 
 // this creates session variable req.user on being called from callbacks
 passport.serializeUser(function (user, cb) {
+  console.log('serialize', user);
   process.nextTick(function () {
     return cb(null, { id: user.id, role: user.role });
   });
@@ -176,6 +177,7 @@ passport.serializeUser(function (user, cb) {
 // this changes session variable req.user when called from authorized request
 
 passport.deserializeUser(function (user, cb) {
+  console.log('de-serialize', user);
   process.nextTick(function () {
     return cb(null, user);
   });
@@ -210,9 +212,10 @@ main().catch((err) => console.log(err));
 
 async function main() {
   await mongoose.connect(process.env.MONGODB_URL);
+
   console.log('database connected');
 }
 
-server.listen(process.env.PORT, () => {
+server.listen(process.env.PORT, (req, res) => {
   console.log('server started');
 });
