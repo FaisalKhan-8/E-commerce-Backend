@@ -2,7 +2,6 @@
   "name": "e-commerce-backend",
   "version": "1.0.0",
   "description": "",
-  "type": "module",
   "main": "index.js",
   "scripts": {
     "start": "node -r esm index.js",
