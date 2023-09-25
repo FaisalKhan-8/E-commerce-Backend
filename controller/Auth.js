@@ -80,7 +80,11 @@ export async function resetPasswordRequest(req, res) {
     await user.save();
 
     // Also set token in email
-    const resetPageLink = '/reset-password?token=' + token + '&email=' + email;
+    const resetPageLink =
+      'https://e-commerce-backend-wine.vercel.app/reset-password?token=' +
+      token +
+      '&email=' +
+      email;
     const subject = 'reset password for e-commerce';
     const html = `<p>Click <a href='${resetPageLink}'>here</a> to Reset Password</p>`;
 
