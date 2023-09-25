@@ -1,6 +1,12 @@
 import express from 'express';
-
-const { createUser, loginUser, checkAuth } = require('../controller/Auth');
+import {
+  createUser,
+  loginUser,
+  checkAuth,
+  resetPasswordRequest,
+  resetPassword,
+  logout,
+} from '../controller/Auth';
 import passport from 'passport';
 
 const router = express.Router();
@@ -9,6 +15,9 @@ const router = express.Router();
 router
   .post('/signup', createUser)
   .post('/login', passport.authenticate('local'), loginUser)
-  .get('/check', passport.authenticate('jwt'), checkAuth);
+  .get('/check', passport.authenticate('jwt'), checkAuth)
+  .get('/logout', logout)
+  .post('/reset-password-request', resetPasswordRequest)
+  .post('/reset-password', resetPassword);
 
 export default router;

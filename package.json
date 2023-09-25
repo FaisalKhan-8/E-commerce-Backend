@@ -2,10 +2,11 @@
   "name": "e-commerce-backend",
   "version": "1.0.0",
   "description": "",
+
   "main": "index.js",
   "scripts": {
     "start": "node -r esm index.js",
-    "dev": "nodemon -r esm index.js",
+    "dev": "nodemon -r esm index.js ",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -20,6 +21,7 @@
     "express-session": "^1.17.3",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^6.7.3",
+    "nodemailer": "^6.9.5",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
