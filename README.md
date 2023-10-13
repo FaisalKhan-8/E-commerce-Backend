@@ -15,6 +15,7 @@ The following technologies were used to create this E-COMMERCE:
 - ExpressJS
 - NodeJS
 - Stripe FOR CARD PAYMENT
+- Vercel
 
 
 
